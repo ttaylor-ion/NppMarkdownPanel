@@ -18,11 +18,12 @@ namespace NppMarkdownPanel.Forms
         public string HtmlFileName { get; set; }
         public bool ShowToolbar { get; set; }
         public string SupportedFileExt { get; set; }
+        public bool AllowMissingFileExt { get; set; }
         public bool AutoShowPanel { get; set; }
 
         public bool ShowStatusbar { get; set; }
 
-        public SettingsForm(int zoomLevel, string cssFileName, string htmlFileName, bool showToolbar, string cssDarkModeFileName, string supportedFileExt, bool autoShowPanel, bool showStatusbar)
+        public SettingsForm(int zoomLevel, string cssFileName, string htmlFileName, bool showToolbar, string cssDarkModeFileName, string supportedFileExt, bool allowMissingFileExt, bool autoShowPanel, bool showStatusbar)
         {
             ZoomLevel = zoomLevel;
             CssFileName = cssFileName;
@@ -30,6 +31,7 @@ namespace NppMarkdownPanel.Forms
             HtmlFileName = htmlFileName;
             ShowToolbar = showToolbar;
             SupportedFileExt = supportedFileExt;
+            AllowMissingFileExt = allowMissingFileExt;
             AutoShowPanel = autoShowPanel;
             ShowStatusbar = showStatusbar;
 
@@ -42,6 +44,7 @@ namespace NppMarkdownPanel.Forms
             tbHtmlFile.Text = htmlFileName;
             cbShowToolbar.Checked = showToolbar;
             tbFileExt.Text = supportedFileExt;
+            cbAllowMissingFileExt.Checked = allowMissingFileExt;
             cbAutoShowPanel.Checked = autoShowPanel;
             cbShowStatusbar.Checked = showStatusbar;
         }
@@ -181,6 +184,11 @@ namespace NppMarkdownPanel.Forms
         private void tbFileExt_TextChanged(object sender, EventArgs e)
         {
             SupportedFileExt = tbFileExt.Text;
+        }
+
+        private void cbAllowMissingFileExt_CheckedChanged(object sender, EventArgs e)
+        {
+            AllowMissingFileExt = cbAllowMissingFileExt.Checked;
         }
 
         private void cbAutoShowPanel_CheckedChanged(object sender, EventArgs e)

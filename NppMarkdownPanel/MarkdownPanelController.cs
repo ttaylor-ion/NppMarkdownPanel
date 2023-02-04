@@ -160,6 +160,7 @@ namespace NppMarkdownPanel
             markdownPreviewForm.ShowToolbar = Utils.ReadIniBool("Options", "ShowToolbar", iniFilePath);
             markdownPreviewForm.ShowStatusbar = Utils.ReadIniBool("Options", "ShowStatusbar", iniFilePath);
             markdownPreviewForm.SupportedFileExt = Win32.ReadIniValue("Options", "SupportedFileExt", iniFilePath, DEFAULT_SUPPORTED_FILE_EXT);
+            markdownPreviewForm.AllowMissingFileExt = Utils.ReadIniBool("Options", "AllowMissingFileExt", iniFilePath);
             autoShowPanel = Utils.ReadIniBool("Options", "AutoShowPanel", iniFilePath);
             markdownPreviewForm.IsDarkModeEnabled = IsDarkModeEnabled();
             PluginBase.SetCommand(0, "Toggle &Markdown Panel", TogglePanelVisible);
@@ -176,7 +177,7 @@ namespace NppMarkdownPanel
 
         private void EditSettings()
         {
-            var settingsForm = new SettingsForm(markdownPreviewForm.ZoomLevel, markdownPreviewForm.CssFileName, markdownPreviewForm.HtmlFileName, markdownPreviewForm.ShowToolbar, markdownPreviewForm.CssDarkModeFileName, markdownPreviewForm.SupportedFileExt, autoShowPanel, markdownPreviewForm.ShowStatusbar);
+            var settingsForm = new SettingsForm(markdownPreviewForm.ZoomLevel, markdownPreviewForm.CssFileName, markdownPreviewForm.HtmlFileName, markdownPreviewForm.ShowToolbar, markdownPreviewForm.CssDarkModeFileName, markdownPreviewForm.SupportedFileExt, markdownPreviewForm.AllowMissingFileExt, autoShowPanel, markdownPreviewForm.ShowStatusbar);
             if (settingsForm.ShowDialog() == DialogResult.OK)
             {
                 markdownPreviewForm.CssFileName = settingsForm.CssFileName;
@@ -185,6 +186,7 @@ namespace NppMarkdownPanel
                 markdownPreviewForm.HtmlFileName = settingsForm.HtmlFileName;
                 markdownPreviewForm.ShowToolbar = settingsForm.ShowToolbar;
                 markdownPreviewForm.SupportedFileExt = settingsForm.SupportedFileExt;
+                markdownPreviewForm.AllowMissingFileExt = settingsForm.AllowMissingFileExt;
                 markdownPreviewForm.ShowStatusbar = settingsForm.ShowStatusbar;
                 autoShowPanel = settingsForm.AutoShowPanel;
 
@@ -264,6 +266,7 @@ namespace NppMarkdownPanel
             Win32.WriteIniValue("Options", "ShowToolbar", markdownPreviewForm.ShowToolbar.ToString(), iniFilePath);
             Win32.WriteIniValue("Options", "ShowStatusbar", markdownPreviewForm.ShowStatusbar.ToString(), iniFilePath);
             Win32.WriteIniValue("Options", "SupportedFileExt", markdownPreviewForm.SupportedFileExt, iniFilePath);
+            Win32.WriteIniValue("Options", "AllowMissingFileExt", markdownPreviewForm.AllowMissingFileExt.ToString(), iniFilePath);
             Win32.WriteIniValue("Options", "AutoShowPanel", autoShowPanel.ToString(), iniFilePath);
         }
         private void ShowAboutDialog()
@@ -346,8 +349,8 @@ namespace NppMarkdownPanel
             if (nppReady && autoShowPanel)
             {
                 // automatically show panel for supported file types
-                if ((!isPanelVisible && markdownPreviewForm.isValidFileExtension(currentFilePath)) ||
-                    (isPanelVisible && !markdownPreviewForm.isValidFileExtension(currentFilePath)))
+                if ((!isPanelVisible && markdownPreviewForm.isValidFileExtension(currentFilePath) == true) ||
+                    (isPanelVisible && markdownPreviewForm.isValidFileExtension(currentFilePath) != true))
                 {
                     TogglePanelVisible();
                 }

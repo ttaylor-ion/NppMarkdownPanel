@@ -55,6 +55,8 @@ namespace NppMarkdownPanel.Forms
 
         public string SupportedFileExt { get; set; }
 
+        public bool AllowMissingFileExt { get; set; }
+
         private bool isDarkModeEnabled;
         public bool IsDarkModeEnabled
         {
@@ -115,7 +117,7 @@ namespace NppMarkdownPanel.Forms
             var defaultBodyStyle = "";
             var markdownStyleContent = GetCssContent(filepath);
 
-            if (!isValidFileExtension(CurrentFilePath))
+            if (isValidFileExtension(CurrentFilePath) == false)
             {
                 var invalidExtensionMessage = string.Format(MSG_NO_SUPPORTED_FILE_EXT, Path.GetFileName(filepath), SupportedFileExt);
                 invalidExtensionMessage = string.Format(DEFAULT_HTML_BASE, Path.GetFileName(filepath), markdownStyleContent, defaultBodyStyle, invalidExtensionMessage);
@@ -367,9 +369,13 @@ namespace NppMarkdownPanel.Forms
         }
 
 
-        public bool isValidFileExtension(string filename)
+        public bool? isValidFileExtension(string filename)
         {
             var currentExtension = Path.GetExtension(filename).ToLower();
+            if (AllowMissingFileExt && currentExtension == String.Empty)
+            {
+                return null;
+            }
             var matchExtensionList = false;
             try
             {
